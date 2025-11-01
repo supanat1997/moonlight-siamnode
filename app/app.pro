@@ -2,7 +2,7 @@ QT += core quick network quickcontrols2 svg
 CONFIG += c++11
 
 unix:!macx {
-    TARGET = moonlight
+    TARGET = SiamNode
 } else {
     # On macOS, this is the name displayed in the global menu bar
     TARGET = Moonlight
@@ -172,6 +172,7 @@ macx {
 }
 
 SOURCES += \
+    backend/AuthManager.cpp \
     backend/nvaddress.cpp \
     backend/nvapp.cpp \
     cli/pair.cpp \
@@ -212,6 +213,7 @@ SOURCES += \
     wm.cpp
 
 HEADERS += \
+    backend/AuthManager.h \
     SDL_compat.h \
     backend/nvaddress.h \
     backend/nvapp.h \
@@ -545,12 +547,11 @@ unix:!macx: {
 }
 win32 {
     RC_ICONS = moonlight.ico
-    QMAKE_TARGET_COMPANY = Moonlight Game Streaming Project
-    QMAKE_TARGET_DESCRIPTION = Moonlight Game Streaming Client
-    QMAKE_TARGET_PRODUCT = Moonlight
-
+    QMAKE_TARGET_COMPANY = SiamNode.io
+    QMAKE_TARGET_DESCRIPTION = SiamNode_Client
+    QMAKE_TARGET_PRODUCT = SiamNode_Client
     CONFIG -= embed_manifest_exe
-    QMAKE_LFLAGS += /MANIFEST:embed /MANIFESTINPUT:$${PWD}/Moonlight.exe.manifest
+    QMAKE_LFLAGS += /MANIFEST:embed /MANIFESTINPUT:$${PWD}/SiamNode_Client.exe.manifest
 }
 macx {
     # Create Info.plist in object dir with the correct version string

@@ -12,6 +12,9 @@
 #include <QElapsedTimer>
 #include <QTemporaryFile>
 #include <QRegularExpression>
+#include "backend/computermanager.h"
+#include "backend/systemproperties.h"
+#include "backend/AuthManager.h"
 
 // Don't let SDL hook our main function, since Qt is already
 // doing the same thing. This needs to be before any headers
@@ -699,6 +702,10 @@ int main(int argc, char *argv[])
     qputenv("SDL_VIDEO_X11_WMCLASS", "com.moonlight_stream.Moonlight");
 
     // Register our C++ types for QML
+    AuthManager* authManager = new AuthManager(&app);
+    qmlRegisterSingletonInstance<AuthManager>("AuthManager", 1, 0, "AuthManager", authManager);
+    qmlRegisterUncreatableType<NvComputer>("ComputerManager", 1,0, "NvComputer", "NvComputer cannot be created from QML");
+
     qmlRegisterType<ComputerModel>("ComputerModel", 1, 0, "ComputerModel");
     qmlRegisterType<AppModel>("AppModel", 1, 0, "AppModel");
     qmlRegisterUncreatableType<Session>("Session", 1, 0, "Session", "Session cannot be created from QML");

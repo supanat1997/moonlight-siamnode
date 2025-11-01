@@ -68,6 +68,9 @@ public:
         return m_Port;
     }
 
+public slots:
+
+
 private slots:
     void handleResolvedTimeout()
     {
@@ -217,6 +220,7 @@ class ComputerManager : public QObject
     friend class PendingPairingTask;
     friend class DelayedFlushThread;
 
+
 public:
     explicit ComputerManager(StreamingPreferences* prefs);
 
@@ -227,6 +231,8 @@ public:
     Q_INVOKABLE void stopPollingAsync();
 
     Q_INVOKABLE void addNewHostManually(QString address);
+
+    Q_INVOKABLE QObject* findComputerByIp(QString ip);
 
     void addNewHost(NvAddress address, bool mdns, NvAddress mdnsIpv6Address = NvAddress());
 

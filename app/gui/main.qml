@@ -3,6 +3,7 @@ import QtQuick.Controls 2.2
 import QtQuick.Layouts 1.3
 import QtQuick.Window 2.2
 import QtQuick.Controls.Material 2.2
+import AuthManager 1.0
 
 import ComputerManager 1.0
 import AutoUpdateChecker 1.0
@@ -94,6 +95,18 @@ ApplicationWindow {
         }
     }
 
+    Connections {
+            target: AuthManager
+            onLoginSuccess: {
+                console.log("QML (main.qml): ได้รับ loginSuccess! IP: " + vmIp + "App" + appName)
+                ComputerManager.addNewHostManually(vmIp)
+                stackView.replace(Qt.resolvedUrl("qrc:/gui/AutoStartSegue.qml"),{
+                                      vmIp: vmIp,
+                                      appName: appName
+                                  })
+            }
+        }
+
     StackView {
         id: stackView
         anchors.fill: parent
@@ -103,7 +116,7 @@ ApplicationWindow {
             // Perform our early initialization before constructing
             // the initial view and pushing it to the StackView
             doEarlyInit()
-            push(initialView)
+            push("qrc:/gui/LoginView.qml")
         }
 
         onCurrentItemChanged: {

@@ -2,6 +2,7 @@
 #include "boxartmanager.h"
 #include "nvhttp.h"
 #include "nvpairingmanager.h"
+#include "nvcomputer.h"
 
 #include <Limelight.h>
 #include <QtEndian>
@@ -10,6 +11,9 @@
 #include <QThreadPool>
 #include <QCoreApplication>
 #include <QRandomGenerator>
+
+#include <Limelight.h>
+
 
 #define SER_HOSTS "hosts"
 #define SER_HOSTS_BACKUP "hostsbackup"
@@ -988,5 +992,47 @@ QString ComputerManager::generatePinString()
 {
     return QString::asprintf("%04u", QRandomGenerator::system()->bounded(10000));
 }
+
+// --- START: โค้ดใหม่ที่ถูกต้อง (สำหรับ computermanager.cpp) ---
+QObject* ComputerManager::findComputerByIp(QString ip)
+{
+    // เราต้อง "ล็อค" m_KnownHosts เพื่อการอ่าน (ตามที่โค้ดอื่นในไฟล์นี้ทำ)
+    QReadLocker lock(&m_Lock);
+
+    // m_KnownHosts เป็น QMap<QString, NvComputer*> เราจะวนลูปดู "ค่า" (values) ของมัน
+    for (NvComputer* computer : m_KnownHosts.values()) {
+
+        // เราจะตรวจสอบที่อยู่ทั้งหมดที่ PC เครื่องนี้รู้จัก
+
+        // 1. ตรวจสอบ "ที่อยู่ Manual" (นี่คืออันที่เราเพิ่งเพิ่ม)
+        if (computer->manualAddress.address() == ip) {
+            qDebug() << "findComputerByIp: Found computer (manual) for IP:" << ip;
+            return (QObject*)computer;
+        }
+
+        // 2. ตรวจสอบ "ที่อยู่ Local" (ที่หาเจอในเครือข่าย)
+        if (computer->localAddress.address() == ip) {
+            qDebug() << "findComputerByIp: Found computer (local) for IP:" << ip;
+            return (QObject*)computer;
+        }
+
+        // 3. ตรวจสอบ "ที่อยู่ Active" (อันที่มันกำลังใช้)
+        if (computer->activeAddress.toString() == ip) {
+            qDebug() << "findComputerByIp: Found computer (active) for IP:" << ip;
+            return (QObject*)computer;
+        }
+
+        // 4. ตรวจสอบ IPv6
+        if (computer->ipv6Address.address() == ip) {
+            qDebug() << "findComputerByIp: Found computer (ipv6) for IP:" << ip;
+            return (QObject*)computer;
+        }
+    }
+
+    // ถ้าวนลูปจนหมดแล้วยังไม่เจอ
+    qWarning() << "findComputerByIp: COULD NOT FIND computer for IP:" << ip;
+    return nullptr;
+}
+// --- END: โค้ดใหม่ที่ถูกต้อง ---
 
 #include "computermanager.moc"
