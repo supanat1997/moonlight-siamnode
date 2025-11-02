@@ -172,7 +172,6 @@ macx {
 }
 
 SOURCES += \
-    backend/AuthManager.cpp \
     backend/nvaddress.cpp \
     backend/nvapp.cpp \
     cli/pair.cpp \
@@ -210,10 +209,10 @@ SOURCES += \
     gui/sdlgamepadkeynavigation.cpp \
     streaming/video/overlaymanager.cpp \
     backend/systemproperties.cpp \
-    wm.cpp
+    wm.cpp \
+    backend/AuthManager.cpp
 
 HEADERS += \
-    backend/AuthManager.h \
     SDL_compat.h \
     backend/nvaddress.h \
     backend/nvapp.h \
@@ -247,7 +246,8 @@ HEADERS += \
     settings/mappingmanager.h \
     gui/sdlgamepadkeynavigation.h \
     streaming/video/overlaymanager.h \
-    backend/systemproperties.h
+    backend/systemproperties.h \
+    backend/AuthManager.h
 
 # Platform-specific renderers and decoders
 ffmpeg {

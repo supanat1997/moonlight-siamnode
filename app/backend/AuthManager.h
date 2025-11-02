@@ -23,8 +23,8 @@ signals:
     void loginSuccess(QString vmIp, QString appName);
     void loginFailed(QString errorMessage);
 
-private slots:
-    void onLoginReply();
+// private slots:
+//     void onLoginReply();
 
 private:
     QNetworkAccessManager* m_NetworkManager;
